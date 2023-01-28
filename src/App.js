@@ -4,7 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 // import model from "../home_office__blender_asset_pack"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { useLoader } from '@react-three/fiber'
-import { Stats, OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei'
+import { Stats, OrbitControls, PerspectiveCamera, useHelper, Environment } from '@react-three/drei'
 import pc from "./88 Keys_Cover (front)_e.jpg"
 import { Group, TextureLoader } from 'three'
 import * as THREE from "three";
@@ -116,7 +116,7 @@ export default function App() {
     <>
       <ambientLight intensity={0.2} />
       <mesh rotation={[-(AngleToRadians(90)), 0, 0]} receiveShadow={true}>
-        <planeGeometry args={[20, 20]} />
+        <planeGeometry args={[50, 50]} />
         <meshStandardMaterial color="#1ea3d8" />
       </mesh>
 
@@ -133,7 +133,9 @@ export default function App() {
       {/* <directionalLight castShadow={true} args={["#00FFFF", 1]} position={[1, 1, 0]} rotation={[0, 180, 0]} /> */}
 
       {/* <PerspectiveCamera position={[10, 10, 10]} fov={45} /> */}
-      <spotLight ref={light} castShadow={true} args={["#FFF", 1]} position={[0, 3.5, -3]} />
+      <spotLight ref={light} args={["#ffffff", 1.5, 7, AngleToRadians(45), 0.4]} position={[-3, 2, 0]} castShadow={true} />
+
+      {/* <spotLight ref={light} castShadow={true} args={["#FFF", 1]} position={[0, 3.5, -3]} /> */}
       {/* <directionalLight castShadow={true} args={["#000", 1]} position={[0, .5, 0]} /> */}
       <OrbitControls minPolarAngle={AngleToRadians(30)} maxPolarAngle={AngleToRadians(80)} />
       {/* <Box position={[-1.2, 0, 0]} /> */}
@@ -142,6 +144,13 @@ export default function App() {
       {/* <Box position={[1.2, 0, 0]} /> */}
       {/* <Model position={[0, 0, 0]} /> */}
       <primitive object={gltf.scene} meshStandardMaterial={colorMap} position={[0, 0, 0]} castShadow={true} />
-    </>)
+      <Environment background>
+        <mesh>
+          <sphereGeometry args={[50, 100, 100]} />
+          <meshBasicMaterial color="#2266cc" side={THREE.BackSide} />
+        </mesh>
+      </Environment>
+    </>
+  )
 }
 
