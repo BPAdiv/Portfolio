@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client'
-import React, { useRef, useState } from 'react'
+import React, { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 // import model from "../home_office__blender_asset_pack"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -8,6 +8,7 @@ import { Stats, OrbitControls, PerspectiveCamera, useHelper, Environment } from 
 import pc from "./88 Keys_Cover (front)_e.jpg"
 import { Group, TextureLoader } from 'three'
 import * as THREE from "three";
+import { Model } from './Model'
 // import angleToRadians from "../"
 // export function Model(props) {
 //   const fileUrl = new URL("../home_office__blender_asset_pack/scene.gltf", import.meta.url);
@@ -34,7 +35,6 @@ import * as THREE from "three";
 
 //   );
 // };
-
 
 export function Box(props) {
   // This reference will give us direct access to the mesh
@@ -69,7 +69,7 @@ export function Box(props) {
 }
 
 export default function App() {
-  const gltf = useLoader(GLTFLoader, "./home_office__blender_asset_pack/scene.gltf");
+  const gltf = useLoader(GLTFLoader, "./models/home_office__blender_asset_pack/scene.gltf");
   const model = gltf.scene
   const colorMap = useLoader(TextureLoader, pc)
   console.log(model);
@@ -80,70 +80,35 @@ export default function App() {
     const pi = Math.PI;
     return deg * (pi / 180);
   }
-  // gltf.scene.children[0].children[0].children[0].castShadow = true
-  // gltf.scene.children[0].children[0].castShadow = true
-  // gltf.scene.children[0].castShadow = true
-  // for (let i = 0; i < gltf.scene.children[0].children[0].children[0].children.length; i++) {
-
-  //   gltf.scene.children[0].children[0].children[0].children[i].castShadow = true
-  //   gltf.scene.children[0].children[0].children[0].children[i].traverse(function (node) {
-  //     // console.log(gltf.scene.children[0].children[0].children[0].children[i]);
-  //     console.log(node.isMesh);
-  //     if (node.isMesh || node.isLight) node.castShadow = true;
-  //     if (node.isMesh || node.isLight) node.receiveShadow = true;
-
-  //   });
-  // }
-  gltf.scene.traverse(function (node) {
-    // console.log(gltf.scene.children[0].children[0].children[0].children[i]);
-    console.log(node.isMesh);
-    if (node.isMesh || node.isLight) node.castShadow = true;
-    if (node.isMesh || node.isLight) node.receiveShadow = true;
-
-  });
-  console.log(gltf.scene.children[0].children[0].children[0].children)
-  // gltf.scene.children[0].children[0].children[0].children.traverse(function (node) {
-
-  //   if (node.isMesh || node.isLight) node.castShadow = true;
-  //   if (node.isMesh || node.isLight) node.receiveShadow = true;
-
-  // });
+  const gl = useRef()
 
   const light = useRef()
-  useHelper(light, THREE.SpotLightHelper, 'cyan')
+  // useHelper(pointLight, PointLightHelper, 0.5, "hotpink")
+  // useFrame(() => {
+  //   gl.current.rotation.x = +0.1
+  // })
+
+  useHelper(light, THREE.PointLightHelper, 0.3, 'cyan')
 
   return (
     <>
+      <fog attach="fog" args={["floralwhite", 2, 100]} />
+
+      <gridHelper args={[30, 30, 30]} />
       <ambientLight intensity={0.2} />
+      <OrbitControls minPolarAngle={AngleToRadians(30)} maxPolarAngle={AngleToRadians(80)} />
       <mesh rotation={[-(AngleToRadians(90)), 0, 0]} receiveShadow={true}>
         <planeGeometry args={[50, 50]} />
         <meshStandardMaterial color="#1ea3d8" />
       </mesh>
+      <pointLight ref={light} args={["#ffffff", 1, 8, AngleToRadians(45), 0.4]} position={[0, 4, -1]} castShadow={true} />
+      <Suspense fallback={null}>
+        <Model />
+      </Suspense>
 
-      {/* <mesh position={[0, 2, 0]} rotation={[0, 0, 0]} castShadow={true}>
-        <sphereGeometry attach="geometry" args={[1, 16, 16]} castShadow={true} />
-        <meshStandardMaterial
-          attach="material"
-          color="white"
-          transparent
-          roughness={0.1}
-          metalness={0.1}
-        />
-      </mesh> */}
-      {/* <directionalLight castShadow={true} args={["#00FFFF", 1]} position={[1, 1, 0]} rotation={[0, 180, 0]} /> */}
-
-      {/* <PerspectiveCamera position={[10, 10, 10]} fov={45} /> */}
-      <spotLight ref={light} args={["#ffffff", 1.5, 7, AngleToRadians(45), 0.4]} position={[-3, 2, 0]} castShadow={true} />
-
-      {/* <spotLight ref={light} castShadow={true} args={["#FFF", 1]} position={[0, 3.5, -3]} /> */}
-      {/* <directionalLight castShadow={true} args={["#000", 1]} position={[0, .5, 0]} /> */}
-      <OrbitControls minPolarAngle={AngleToRadians(30)} maxPolarAngle={AngleToRadians(80)} />
-      {/* <Box position={[-1.2, 0, 0]} /> */}
-      {/* <spotLight castShadow={true} color="#fFFFFF" position={[-3, 1, 0]} /> */}
+      {/* <spotLight ref={light} args={["#ffffff", 1.5, 7, AngleToRadians(45), 0.4]} position={[-3, 2, 0]} castShadow={true} /> */}
       {/* <pointLightHelper /> */}
-      {/* <Box position={[1.2, 0, 0]} /> */}
-      {/* <Model position={[0, 0, 0]} /> */}
-      <primitive object={gltf.scene} meshStandardMaterial={colorMap} position={[0, 0, 0]} castShadow={true} />
+      {/* <primitive object={gltf.scene} meshStandardMaterial={colorMap} position={[0, 0, 0]} castShadow={true} /> */}
       <Environment background>
         <mesh>
           <sphereGeometry args={[50, 100, 100]} />
