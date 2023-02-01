@@ -3,3 +3,65 @@
   width: 100vw;
   height: 100vh;
 }
+
+.ppp {
+  position: relative;
+  display: flex;
+}
+
+.canvas {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+.projects,
+.about-me {
+  height: 100vh;
+  width: 50vw;
+  display: flex;
+  /* align-items:
+   center; */
+  font-weight: 500;
+  font-size: 20px;
+  color: white;
+}
+
+.sub-projects {
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  height: 100vh;
+  width: 50vw;
+  display: flex;
+  /* align-items: center; */
+}
+
+.hero {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.hero-heading {
+  padding: 5vw;
+}
+
+.hero-heading h1 {
+  font-size: 64px;
+}
+
+.hero-heading h3 {
+  font-size: 50px;
+}
+
+.projects {
+  font-size: 64px;
+  align-items: flex-start;
+
+}
